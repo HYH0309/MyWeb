@@ -5,7 +5,7 @@ $breakpoints: (
   md: 768px,
   lg: 992px,
   xl: 1200px,
-  xxl: 1400px,
+  xxl: 1400px
 );
 
 // 响应式 mixin
@@ -37,11 +37,11 @@ $breakpoints: (
   max-width: $max-width;
   margin: 0 auto;
   padding: 0 1rem;
-
+  
   @include respond-to(sm) {
     padding: 0 1.5rem;
   }
-
+  
   @include respond-to(lg) {
     padding: 0 2rem;
   }
