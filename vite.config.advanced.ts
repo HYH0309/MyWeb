@@ -3,17 +3,7 @@ import vue from "@vitejs/plugin-vue";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    vue({
-      // 优化 Vue 编译选项
-      template: {
-        compilerOptions: {
-          // 移除开发时的注释
-          comments: false,
-        },
-      },
-    }),
-  ],
+  plugins: [vue()],
   build: {
     target: "es2015",
     outDir: "dist",
@@ -35,46 +25,76 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        // 完全禁用代码分割，所有JS代码合并为一个文件
+        // 完全合并所有代码为一个文件（最清洁的输出）
         manualChunks: () => "app",
 
-        // 简化文件命名，只有一个主文件
+        // 其他分包策略选项（注释掉）:
+
+        // 选项1: 按依赖类型分包
+        /*
+        manualChunks: {
+          'vue-vendor': ['vue'],
+          'ui-vendor': ['element-plus'],
+          'http-vendor': ['axios'],
+        },
+        */
+
+        // 选项2: 智能分包
+        /*
+        manualChunks: (id) => {
+          if (id.includes('node_modules')) {
+            if (id.includes('vue')) return 'vue-vendor';
+            if (id.includes('element-plus')) return 'ui-vendor';
+            return 'vendor';
+          }
+          if (id.includes('src/components')) return 'components';
+          if (id.includes('src/composables')) return 'composables';
+          return 'app';
+        },
+        */
+
+        // 选项3: 完全不分包（Vite默认行为）
+        /*
+        manualChunks: undefined,
+        */
+
+        // 简化的文件命名（单文件版本）
         chunkFileNames: "js/app.js",
         entryFileNames: "js/app.js",
         assetFileNames: (assetInfo) => {
           const name = assetInfo.name || "asset";
           const extType = name.split(".").pop()?.toLowerCase();
 
-          // CSS 文件 - 合并为单个文件
+          // CSS 文件 - 单个文件
           if (extType === "css") {
             return "css/app.css";
           }
 
-          // 图片文件
+          // 静态资源 - 去掉hash，更清洁
           if (/^(png|jpe?g|gif|svg|webp|ico|bmp|tiff?)$/i.test(extType || "")) {
             return "images/[name][extname]";
           }
 
-          // 字体文件
           if (/^(woff2?|eot|ttf|otf)$/i.test(extType || "")) {
             return "fonts/[name][extname]";
           }
 
-          // 音频文件
           if (/^(mp3|wav|ogg|flac|aac)$/i.test(extType || "")) {
             return "audio/[name][extname]";
           }
 
-          // 视频文件
           if (/^(mp4|webm|ogg|avi|mov)$/i.test(extType || "")) {
             return "video/[name][extname]";
           }
 
-          // 其他资源
           return "assets/[name][extname]";
         },
       },
-    }, // 清理输出目录
+      // 外部依赖（如果需要CDN加载）
+      // external: ['vue'],
+    },
+
+    // 清理输出目录
     emptyOutDir: true,
 
     // 将所有CSS打包到一个文件
@@ -82,43 +102,11 @@ export default defineConfig({
 
     // 禁用构建报告（提高构建速度）
     reportCompressedSize: false,
-
-    // chunk 大小警告限制 (KB)
+    // chunk 大小警告限制 (KB) - 单文件可以设置更大
     chunkSizeWarningLimit: 2000,
 
-    // 生产环境关闭source map
+    // 启用source map（可选，生产环境建议关闭）
     sourcemap: false,
-
-    // 清理构建缓存
-    write: true,
-
-    // 资源内联限制
-    assetsInlineLimit: 4096,
-  },
-  // CSS 预处理器选项
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // 移除自动导入，避免重复导入
-        // additionalData: `@import "@/style.scss";`,
-      },
-    },
-    // CSS 模块化
-    modules: false,
-    // 后处理器选项
-    postcss: {},
-  },
-
-  // Esbuild 优化
-  esbuild: {
-    // 移除 console 和 debugger
-    drop: ["console", "debugger"],
-    // 压缩标识符
-    minifyIdentifiers: true,
-    // 压缩语法
-    minifySyntax: true,
-    // 压缩空白
-    minifyWhitespace: true,
   },
 
   server: {

@@ -12,15 +12,24 @@
     "noEmit": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "lib": ["ESNext", "DOM"],
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "baseUrl": "./",
     "paths": {
-      "/@/*": ["src/*"]
+      "/@/*": [
+        "src/*"
+      ]
     },
-    "types": ["vite/client", "element-plus/global", "node"]
+    "types": [
+      "vite/client",
+      "element-plus/global",
+      "node"
+    ]
   },
   "include": [
     "src/**/*.ts",

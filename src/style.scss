@@ -1,22 +1,27 @@
 html {
   margin: 0;
   padding: 0;
-  height: 100%; /* 确保高度占满视口 */
-  background-image: url('/background.png'); /* 替换为正确的图片路径 */
-  background-size: cover; /* 拉伸填充整个屏幕，保持图片比例 */
-  background-position: center; /* 居中对齐图片 */
-  background-repeat: no-repeat; /* 防止背景图片重复 */
-  background-attachment: fixed; /* 背景固定，不随内容滚动 */
+  height: 100%;
+  background-image: url("/background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 :root {
-  --font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif; // 统一字体
+  --font-family: "Inter", system-ui, Avenir, Helvetica, Arial, sans-serif;
   --line-height: 1.5;
   --font-weight: 400;
+  --primary-color: #646cff;
+  --primary-color-hover: #535bf2;
+  --bg-color: #242424;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --border-radius: 8px;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--text-color);
+  background-color: var(--bg-color);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -24,8 +29,12 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-html, body, h1, a, button {
-  font-family: var(--font-family); // 引用统一字体
+html,
+body,
+h1,
+a,
+button {
+  font-family: var(--font-family);
 }
 
 body {
@@ -34,78 +43,155 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  position: relative; // 使背景模糊层相对定位
+  position: relative;
 }
 
 h1 {
   font-size: 3.2em;
-  line-height: var(--line-height); // 引用统一行高
+  line-height: var(--line-height);
 }
 
 a {
   font-weight: 500;
-  color: #646cff;
+  color: var(--primary-color);
   text-decoration: inherit;
+  transition: color 0.3s ease;
 }
+
 a:hover {
-  color: #535bf2;
+  color: var(--primary-color-hover);
 }
 
 button {
-  border-radius: 8px;
+  border-radius: var(--border-radius);
   border: 1px solid transparent;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
   background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
+  transition: all 0.25s ease;
 }
+
 button:hover {
-  border-color: #646cff;
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+button:active {
+  transform: translateY(0);
+}
+
 .card {
   padding: 2em;
-  position: relative; // 确保卡片在模糊层之上
-  z-index: 1; // 提高卡片的 z-index，以确保其在模糊层之上
+  position: relative;
+  z-index: 1;
 }
 
 #app {
+  width: 100%;
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
-  position: relative; // 确保背景糊化层在此元素下
-  z-index: 1; // 提高 z-index
+  position: relative;
+  z-index: 1;
 }
 
 // 添加伪元素来创建模糊背景效果
 body::before {
-  content: '';
-  position: absolute; // 绝对定位
+  content: "";
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: inherit; // 继承父元素的背景
-  filter: blur(10px); // 设置模糊程度
-  z-index: 0; // 确保模糊层在内容下方
-  opacity: 0.5; // 调整透明度，减轻模糊效果
+  background: inherit;
+  filter: blur(10px);
+  z-index: 0;
+  opacity: 0.5;
+}
+
+// 滚动条样式优化
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5em;
+  }
+
+  button {
+    padding: 0.5em 1em;
+    font-size: 0.9em;
+  }
+
+  .card {
+    padding: 1.5em;
+  }
+
+  #app {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  h1 {
+    font-size: 2em;
+  }
+
+  .card {
+    padding: 1em;
+  }
+
+  #app {
+    padding: 0.5rem;
+  }
+}
+
+// 动画优化
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 @media (prefers-color-scheme: light) {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --text-color: #213547;
+    --bg-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
